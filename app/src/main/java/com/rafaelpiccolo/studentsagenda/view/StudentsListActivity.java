@@ -4,12 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rafaelpiccolo.studentsagenda.R;
 import com.rafaelpiccolo.studentsagenda.dao.StudentDAO;
+import com.rafaelpiccolo.studentsagenda.model.Student;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentsListActivity extends AppCompatActivity {
 
@@ -40,9 +46,18 @@ public class StudentsListActivity extends AppCompatActivity {
     public void configureList() {
         ListView studentsList = findViewById(R.id.students_list);
 
+        final List<Student> allStudents = dao.all();
+
         studentsList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
-                dao.all()));
+                allStudents));
+        studentsList.setOnItemClickListener((parent, view, position, id) -> {
+            Student chosenStudent = allStudents.get(position);
+            Intent goToForm = new Intent(StudentsListActivity.this, StudentFormActivity.class);
+
+            goToForm.putExtra("student", chosenStudent);
+            startActivity(goToForm);
+        });
     }
 
     private void openForm() {

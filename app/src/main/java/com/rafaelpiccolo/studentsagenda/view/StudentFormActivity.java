@@ -3,8 +3,8 @@ package com.rafaelpiccolo.studentsagenda.view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -17,6 +17,7 @@ public class StudentFormActivity extends AppCompatActivity {
     private EditText nameField;
     private EditText mobileField;
     private EditText emailField;
+    private Student student;
     private final StudentDAO dao = new StudentDAO();
 
     @Override
@@ -27,6 +28,12 @@ public class StudentFormActivity extends AppCompatActivity {
 
         initializeFields();
         configureSaveButton();
+
+        Intent data = getIntent();
+        student = (Student) data.getSerializableExtra("student");
+        nameField.setText(student.getName());
+        mobileField.setText(student.getMobile());
+        emailField.setText(student.getEmail());
     }
 
     private void initializeFields() {
@@ -38,8 +45,11 @@ public class StudentFormActivity extends AppCompatActivity {
     private void configureSaveButton() {
         Button saveButton = findViewById(R.id.save_button);
         saveButton.setOnClickListener(v -> {
-            Student createdStudent = createStudent();
-            save(createdStudent);
+            //Student createdStudent = createStudent();
+            //save(createdStudent);
+            createStudent();
+            dao.edit(student);
+            finish();
         });
     }
 
@@ -48,12 +58,13 @@ public class StudentFormActivity extends AppCompatActivity {
         finish();
     }
 
-    @NonNull
-    private Student createStudent() {
+    private void createStudent() {
         String name = nameField.getText().toString();
         String mobile = mobileField.getText().toString();
         String email = emailField.getText().toString();
 
-        return new Student(name, mobile, email);
+        student.setName(name);
+        student.setMobile(mobile);
+        student.setEmail(email);
     }
 }

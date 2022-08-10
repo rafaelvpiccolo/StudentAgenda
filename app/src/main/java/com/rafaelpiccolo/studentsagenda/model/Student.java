@@ -2,7 +2,10 @@ package com.rafaelpiccolo.studentsagenda.model;
 
 import androidx.annotation.NonNull;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable {
+
     private int id = 0;
     private String name;
     private String mobile;
