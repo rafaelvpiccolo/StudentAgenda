@@ -1,6 +1,6 @@
 package com.rafaelpiccolo.studentsagenda.dao;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.rafaelpiccolo.studentsagenda.model.Student;
 
@@ -19,19 +19,32 @@ public class StudentDAO {
     }
 
     public void edit(Student student) {
-        Student foundStudent = null;
-        for (Student s : students) {
-            if(s.getId() == student.getId()) {
-                foundStudent = s;
-            }
-        }
+        Student foundStudent = findStudentByID(student);
         if (foundStudent != null ) {
             int studentPosition = students.indexOf(foundStudent);
             students.set(studentPosition, student);
         }
     }
 
+    public void delete(Student student) {
+        Student deletedStudent = findStudentByID(student);
+        if(deletedStudent != null) {
+            students.remove(deletedStudent);
+        }
+    }
+
+    @Nullable
+    private Student findStudentByID(Student student) {
+        for (Student s : students) {
+            if(s.getId() == student.getId()) {
+                return s;
+            }
+        }
+        return null;
+    }
+
     public List<Student> all() {
         return new ArrayList<>(students);
     }
+
 }

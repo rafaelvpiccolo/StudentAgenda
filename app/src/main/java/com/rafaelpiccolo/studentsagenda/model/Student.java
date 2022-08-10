@@ -17,6 +17,9 @@ public class Student implements Serializable {
         this.email = email;
     }
 
+    public Student() {
+    }
+
     //Getters
     public int getId() {
         return id;
@@ -55,5 +58,9 @@ public class Student implements Serializable {
     @Override
     public String toString() {
         return name;
+    }
+
+    public boolean hasValidID() {
+        return id > 0;
     }
 }

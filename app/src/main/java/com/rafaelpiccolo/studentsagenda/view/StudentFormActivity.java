@@ -1,5 +1,7 @@
 package com.rafaelpiccolo.studentsagenda.view;
 
+import static com.rafaelpiccolo.studentsagenda.view.ActivitiesConstants.STUDENT_KEY;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,13 +26,25 @@ public class StudentFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_form);
-        setTitle("Student Form");
 
         initializeFields();
         configureSaveButton();
+        loadStudent();
+    }
 
+    private void loadStudent() {
         Intent data = getIntent();
-        student = (Student) data.getSerializableExtra("student");
+        if (data.hasExtra(STUDENT_KEY)){
+            setTitle("Edit Student");
+            student = (Student) data.getSerializableExtra(STUDENT_KEY);
+            fillFields();
+        } else {
+            setTitle("New Student");
+            student = new Student();
+        }
+    }
+
+    private void fillFields() {
         nameField.setText(student.getName());
         mobileField.setText(student.getMobile());
         emailField.setText(student.getEmail());
@@ -45,16 +59,18 @@ public class StudentFormActivity extends AppCompatActivity {
     private void configureSaveButton() {
         Button saveButton = findViewById(R.id.save_button);
         saveButton.setOnClickListener(v -> {
-            //Student createdStudent = createStudent();
-            //save(createdStudent);
-            createStudent();
-            dao.edit(student);
-            finish();
+            endForm();
         });
     }
 
-    private void save(Student student) {
-        dao.save(student);
+    private void endForm() {
+        createStudent();
+        if(student.hasValidID()) {
+            dao.edit(student);
+        }
+        else {
+            dao.save(student);
+        }
         finish();
     }
 
