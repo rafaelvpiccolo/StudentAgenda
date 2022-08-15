@@ -2,12 +2,15 @@ package com.rafaelpiccolo.studentsagenda.view;
 
 import static com.rafaelpiccolo.studentsagenda.view.ActivitiesConstants.STUDENT_KEY;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -43,6 +46,15 @@ public class StudentsListActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.add("Delete");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo menuInfo =
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Student chosenStudent = adapter.getItem(menuInfo.position);
+        deleteStudent(chosenStudent);
+        return super.onContextItemSelected(item);
     }
 
     private void reloadStudents() {
