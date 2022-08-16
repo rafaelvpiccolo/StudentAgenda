@@ -2,6 +2,9 @@ package com.rafaelpiccolo.studentsagenda.view;
 
 import static com.rafaelpiccolo.studentsagenda.view.ActivitiesConstants.STUDENT_KEY;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -49,12 +52,23 @@ public class StudentsListActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int menuID = item.getItemId();
         if(menuID == R.id.delete_menu) {
+            confirmDelete(item);
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    private void confirmDelete(@NonNull MenuItem item) {
+        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(this);
+        deleteDialog.setTitle("Delete Student");
+        deleteDialog.setMessage("Are you sure you want to delete this student?");
+        deleteDialog.setPositiveButton("Yes", (dialog, which) -> {
             AdapterView.AdapterContextMenuInfo menuInfo =
                     (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             Student chosenStudent = adapter.getItem(menuInfo.position);
             deleteStudent(chosenStudent);
-        }
-        return super.onContextItemSelected(item);
+        });
+        deleteDialog.setNegativeButton("No", null);
+        deleteDialog.show();
     }
 
     private void reloadStudents() {
