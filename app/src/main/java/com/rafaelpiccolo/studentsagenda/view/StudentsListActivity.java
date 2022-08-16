@@ -34,6 +34,8 @@ public class StudentsListActivity extends AppCompatActivity {
 
         configureFAB();
         configureList();
+        dao.save(new Student("Rafael", "19983663497", "rafaelvpiccolo@gmail.com"));
+        dao.save(new Student("Agatha", "19983663497", "agathabertolani@gmail.com"));
     }
 
     @Override
@@ -45,15 +47,18 @@ public class StudentsListActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add("Delete");
+        getMenuInflater().inflate(R.menu.activity_students_list_menu, menu);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        AdapterView.AdapterContextMenuInfo menuInfo =
-                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Student chosenStudent = adapter.getItem(menuInfo.position);
-        deleteStudent(chosenStudent);
+        int menuID = item.getItemId();
+        if(menuID == R.id.delete_menu) {
+            AdapterView.AdapterContextMenuInfo menuInfo =
+                    (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            Student chosenStudent = adapter.getItem(menuInfo.position);
+            deleteStudent(chosenStudent);
+        }
         return super.onContextItemSelected(item);
     }
 

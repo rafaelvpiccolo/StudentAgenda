@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.rafaelpiccolo.studentsagenda.R;
@@ -28,8 +29,22 @@ public class StudentFormActivity extends AppCompatActivity {
         setContentView(R.layout.activity_student_form);
 
         initializeFields();
-        configureSaveButton();
         loadStudent();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_student_form_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemID = item.getItemId();
+        if(itemID == R.id.save_student_menu) {
+            endForm();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadStudent() {
@@ -54,13 +69,6 @@ public class StudentFormActivity extends AppCompatActivity {
         nameField = findViewById(R.id.name_field);
         mobileField = findViewById(R.id.mobile_field);
         emailField = findViewById(R.id.email_field);
-    }
-
-    private void configureSaveButton() {
-        Button saveButton = findViewById(R.id.save_button);
-        saveButton.setOnClickListener(v -> {
-            endForm();
-        });
     }
 
     private void endForm() {
