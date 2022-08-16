@@ -2,15 +2,11 @@ package com.rafaelpiccolo.studentsagenda.view;
 
 import static com.rafaelpiccolo.studentsagenda.view.ActivitiesConstants.STUDENT_KEY;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -18,19 +14,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rafaelpiccolo.studentsagenda.R;
-import com.rafaelpiccolo.studentsagenda.dao.StudentDAO;
 import com.rafaelpiccolo.studentsagenda.model.Student;
-import com.rafaelpiccolo.studentsagenda.view.adapter.StudentsListAdapter;
 
 public class StudentsListActivity extends AppCompatActivity {
-
-    private final StudentDAO dao = new StudentDAO();
-    private StudentsListAdapter adapter;
-
+    StudentsListView studentsListView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_students_list);
+        studentsListView = new StudentsListView(this);
         setTitle("Students List");
         configureFAB();
         configureList();
@@ -39,7 +31,7 @@ public class StudentsListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        reloadStudents();
+        studentsListView.reloadStudents();
     }
 
     @Override
@@ -52,47 +44,22 @@ public class StudentsListActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int menuID = item.getItemId();
         if(menuID == R.id.delete_menu) {
-            confirmDelete(item);
+            studentsListView.confirmDelete(item);
         }
         return super.onContextItemSelected(item);
     }
 
-    private void confirmDelete(@NonNull MenuItem item) {
-        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(this);
-        deleteDialog.setTitle("Delete Student");
-        deleteDialog.setMessage("Are you sure you want to delete this student?");
-        deleteDialog.setPositiveButton("Yes", (dialog, which) -> {
-            AdapterView.AdapterContextMenuInfo menuInfo =
-                    (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            Student chosenStudent = adapter.getItem(menuInfo.position);
-            deleteStudent(chosenStudent);
-        });
-        deleteDialog.setNegativeButton("No", null);
-        deleteDialog.show();
-    }
-
-    private void reloadStudents() {
-        adapter.reload(dao.all());
-    }
-
     public void configureFAB() {
         FloatingActionButton fab = findViewById(R.id.add_student_fab);
-        fab.setOnClickListener(v -> {
-            openFormToAdd();
-        });
+        fab.setOnClickListener(v -> openFormToAdd());
     }
 
     public void configureList() {
         ListView studentsList = findViewById(R.id.students_list);
 
-        configureAdapter(studentsList);
+        studentsListView.configureAdapter(studentsList);
         configureItemClickListener(studentsList);
         registerForContextMenu(studentsList);
-    }
-
-    private void deleteStudent(Student student) {
-        dao.delete(student);
-        adapter.remove(student);
     }
 
     private void configureItemClickListener(ListView studentsList) {
@@ -108,13 +75,7 @@ public class StudentsListActivity extends AppCompatActivity {
         startActivity(goToForm);
     }
 
-    private void configureAdapter(ListView studentsList) {
-        adapter = new StudentsListAdapter(this);
-        studentsList.setAdapter(adapter);
-    }
-
     private void openFormToAdd() {
         startActivity(new Intent(this, StudentFormActivity.class));
     }
-
 }
