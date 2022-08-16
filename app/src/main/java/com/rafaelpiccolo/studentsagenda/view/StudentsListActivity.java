@@ -2,29 +2,27 @@ package com.rafaelpiccolo.studentsagenda.view;
 
 import static com.rafaelpiccolo.studentsagenda.view.ActivitiesConstants.STUDENT_KEY;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rafaelpiccolo.studentsagenda.R;
 import com.rafaelpiccolo.studentsagenda.dao.StudentDAO;
 import com.rafaelpiccolo.studentsagenda.model.Student;
-
-import java.util.List;
+import com.rafaelpiccolo.studentsagenda.view.adapter.StudentsListAdapter;
 
 public class StudentsListActivity extends AppCompatActivity {
 
     private final StudentDAO dao = new StudentDAO();
-    private ArrayAdapter<Student> adapter;
+    private StudentsListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +61,7 @@ public class StudentsListActivity extends AppCompatActivity {
     }
 
     private void reloadStudents() {
-        adapter.clear();
-        adapter.addAll(dao.all());
+        adapter.reload(dao.all());
     }
 
     public void configureFAB() {
@@ -101,7 +98,7 @@ public class StudentsListActivity extends AppCompatActivity {
     }
 
     private void configureAdapter(ListView studentsList) {
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        adapter = new StudentsListAdapter(this);
         studentsList.setAdapter(adapter);
     }
 
