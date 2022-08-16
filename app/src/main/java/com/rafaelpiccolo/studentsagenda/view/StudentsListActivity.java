@@ -29,11 +29,8 @@ public class StudentsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_students_list);
         setTitle("Students List");
-
         configureFAB();
         configureList();
-        dao.save(new Student("Rafael", "19983663497", "rafaelvpiccolo@gmail.com"));
-        dao.save(new Student("Agatha", "19983663497", "agathabertolani@gmail.com"));
     }
 
     @Override
